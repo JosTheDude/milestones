@@ -1,0 +1,15 @@
+# Default configuration for PayNowStoreHook
+# Define thresholds in ascending order. Each threshold has an amount and a list of server commands
+# that will be executed as the console when a player reaches or exceeds the amount.
+
+thresholds:
+  - amount: 10.0
+    commands:
+      - "say %player% reached total spend of 10"
+  - amount: 50.0
+    commands:
+      - "give %player% minecraft:diamond 1"
+  - amount: 100.0
+    commands:
+      - "eco give %player% 100"
+

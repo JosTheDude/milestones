@@ -1,0 +1,21 @@
+name: PayNowStoreHook
+version: '1.0'
+main: gg.jos.payNowStoreHook.PayNowStoreHook
+api-version: '1.21'
+authors: [ JosTheDude ]
+description: A simple milestones system to hook in with command processors like Tebex & PayNow for spend milestone-based perks.
+website: https://jos.gg/
+
+commands:
+  paynowstorehook:
+    description: Manage PayNowStoreHook spend tracking
+    usage: /<command> view [player] | /<command> add <player> <amount> | /<command> <player> <amount>
+    permission: paynowstorehook.use
+    permission-message: You don't have permission to use this command.
+
+permissions:
+  paynowstorehook.use:
+    default: op
+  paynowstorehook.modify:
+    description: Allows adding spend for players (non-ops)
+    default: op
