@@ -1,15 +1,26 @@
-# Default configuration for PayNowStoreHook
-# Define thresholds in ascending order. Each threshold has an amount and a list of server commands
-# that will be executed as the console when a player reaches or exceeds the amount.
+messages:
+  usage: "Usage: /paynowstorehook view [player] | /paynowstorehook add <player> <amount> | /paynowstorehook remove <player> <amount> | /paynowstorehook <player> <amount>"
+  no_permission: "No permission."
+  player_not_online: "Player not online."
+  console_specify_player: "Console must specify a player: /paynowstorehook view <player>"
+  invalid_amount: "Invalid amount."
+  view: "%player% has spent: %amount%"
+  added: "Added %amount% to %player%. Total: %total%"
+  removed: "Removed %amount% from %player%. Total: %total%"
 
 thresholds:
   - amount: 10.0
     commands:
       - "say %player% reached total spend of 10"
+    undo_commands:
+      - "say %player% dropped below 10"
   - amount: 50.0
     commands:
       - "give %player% minecraft:diamond 1"
+    undo_commands:
+      - "say %player% lost diamond rewards"
   - amount: 100.0
     commands:
       - "eco give %player% 100"
-
+    undo_commands:
+      - "eco take %player% 100"
