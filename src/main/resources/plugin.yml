@@ -1,5 +1,5 @@
 name: PayNowStoreHook
-version: '1.0'
+version: '1.1'
 main: gg.jos.payNowStoreHook.PayNowStoreHook
 api-version: '1.21'
 authors: [ JosTheDude ]

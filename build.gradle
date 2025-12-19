@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = 'gg.jos'
-version = '1.0'
+version = '1.1'
 
 repositories {
     mavenCentral()
@@ -21,6 +22,8 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.mysql:mysql-connector-j:8.4.0")
 }
 
 tasks {
@@ -57,4 +60,16 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+tasks.named("shadowJar") {
+    archiveClassifier.set("")
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("shadowJar"))
+}
+
+tasks.named("jar") {
+    enabled = false
 }

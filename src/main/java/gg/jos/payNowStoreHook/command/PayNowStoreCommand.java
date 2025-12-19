@@ -8,14 +8,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.CompletableFuture;
 
 public final class PayNowStoreCommand implements CommandExecutor {
 
+    private final JavaPlugin plugin;
     private final PlayerSpendStore spendStore;
     private final ThresholdService thresholdService;
     private final Messages messages;
 
-    public PayNowStoreCommand(PlayerSpendStore spendStore, ThresholdService thresholdService, Messages messages) {
+    public PayNowStoreCommand(JavaPlugin plugin, PlayerSpendStore spendStore, ThresholdService thresholdService, Messages messages) {
+        this.plugin = plugin;
         this.spendStore = spendStore;
         this.thresholdService = thresholdService;
         this.messages = messages;
@@ -58,8 +63,13 @@ public final class PayNowStoreCommand implements CommandExecutor {
             return true;
         }
 
-        double spent = spendStore.getSpent(target);
-        sender.sendMessage(messages.view(target.getName(), formatAmount(spent)));
+        spendStore.load(target).whenComplete((data, throwable) -> {
+            if (throwable != null) {
+                handleDatabaseFailure(sender);
+                return;
+            }
+            runSync(() -> sender.sendMessage(messages.view(target.getName(), formatAmount(data.spent()))));
+        });
         return true;
     }
 
@@ -89,11 +99,20 @@ public final class PayNowStoreCommand implements CommandExecutor {
             return true;
         }
 
-        double newTotal = type == ModificationType.ADD
+        CompletableFuture<PlayerSpendStore.PlayerData> future = type == ModificationType.ADD
             ? spendStore.addSpent(target, amount)
             : spendStore.removeSpent(target, amount);
-        thresholdService.apply(target, newTotal);
-        sender.sendMessage(formatModificationMessage(type, target, amount, newTotal));
+
+        future.whenComplete((data, throwable) -> {
+            if (throwable != null || data == null) {
+                handleDatabaseFailure(sender);
+                return;
+            }
+            runSync(() -> {
+                thresholdService.apply(target, data);
+                sender.sendMessage(formatModificationMessage(type, target, amount, data.spent()));
+            });
+        });
         return true;
     }
 
@@ -120,6 +139,18 @@ public final class PayNowStoreCommand implements CommandExecutor {
             return messages.added(target.getName(), amountFormatted, totalFormatted);
         }
         return messages.removed(target.getName(), amountFormatted, totalFormatted);
+    }
+
+    private void handleDatabaseFailure(CommandSender sender) {
+        runSync(() -> sender.sendMessage(messages.databaseError()));
+    }
+
+    private void runSync(Runnable runnable) {
+        if (Bukkit.isPrimaryThread()) {
+            runnable.run();
+            return;
+        }
+        Bukkit.getScheduler().runTask(plugin, runnable);
     }
 
     private enum ModificationType {

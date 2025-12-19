@@ -7,6 +7,7 @@ messages:
   view: "%player% has spent: %amount%"
   added: "Added %amount% to %player%. Total: %total%"
   removed: "Removed %amount% from %player%. Total: %total%"
+  database_error: "Database error. Please contact an administrator."
 
 thresholds:
   - amount: 10.0
@@ -24,3 +25,15 @@ thresholds:
       - "eco give %player% 100"
     undo_commands:
       - "eco take %player% 100"
+
+database:
+  host: "127.0.0.1"
+  port: 3306
+  name: "paynow"
+  username: "paynow"
+  password: "changeme"
+  use_ssl: false
+  pool:
+    maximum_size: 10
+    minimum_idle: 2
+    connection_timeout_millis: 10000

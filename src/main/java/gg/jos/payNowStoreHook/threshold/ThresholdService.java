@@ -20,16 +20,16 @@ public final class ThresholdService {
         this.thresholds = List.copyOf(thresholds);
     }
 
-    public void apply(Player player, double currentSpent) {
+    public void apply(Player player, PlayerSpendStore.PlayerData data) {
         if (thresholds.isEmpty()) {
-            if (spendStore.getLastThresholdIndex(player) != -1) {
-                spendStore.updateThresholdIndex(player, -1);
+            if (data.thresholdIndex() != -1) {
+                spendStore.updateThresholdIndex(player.getUniqueId(), player.getName(), -1);
             }
             return;
         }
 
-        int previousIndex = Math.min(spendStore.getLastThresholdIndex(player), thresholds.size() - 1);
-        int targetIndex = resolveIndex(currentSpent);
+        int previousIndex = Math.min(Math.max(-1, data.thresholdIndex()), thresholds.size() - 1);
+        int targetIndex = resolveIndex(data.spent());
 
         if (targetIndex > previousIndex) {
             for (int i = previousIndex + 1; i <= targetIndex; i++) {
@@ -42,7 +42,7 @@ public final class ThresholdService {
         }
 
         if (targetIndex != previousIndex) {
-            spendStore.updateThresholdIndex(player, targetIndex);
+            spendStore.updateThresholdIndex(player.getUniqueId(), player.getName(), targetIndex);
         }
     }
 

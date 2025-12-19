@@ -55,9 +55,10 @@ public final class PayNowPlaceholderExpansion extends PlaceholderExpansion {
         if (online == null) {
             return "";
         }
+        spendStore.ensureLoaded(online);
         String identifier = params.toLowerCase(Locale.ENGLISH);
         if (identifier.equals("spent") || identifier.equals("total_spent")) {
-            return formatAmount(spendStore.getSpent(online));
+            return formatAmount(spendStore.getCachedSpent(online.getUniqueId()));
         }
         return "";
     }

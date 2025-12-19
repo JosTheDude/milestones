@@ -18,6 +18,7 @@ public final class Messages {
         DEFAULTS.put("view", "%player% has spent: %amount%");
         DEFAULTS.put("added", "Added %amount% to %player%. Total: %total%");
         DEFAULTS.put("removed", "Removed %amount% from %player%. Total: %total%");
+        DEFAULTS.put("database_error", "Database error. Please check console.");
     }
 
     private final FileConfiguration configuration;
@@ -66,6 +67,10 @@ public final class Messages {
             Placeholder.of("%amount%", amountFormatted),
             Placeholder.of("%total%", totalFormatted)
         );
+    }
+
+    public String databaseError() {
+        return get("database_error");
     }
 
     private String get(String key) {
