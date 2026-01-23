@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id 'com.gradleup.shadow' version '8.3.0'
 }
 
 group = 'gg.jos'
-version = '1.1'
+version = '1.2.0'
 
 repositories {
     mavenCentral()
@@ -17,20 +17,19 @@ repositories {
         name = "placeholderapi"
         url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.mysql:mysql-connector-j:8.4.0")
 }
 
 tasks {
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21")
     }
 }
@@ -46,8 +45,9 @@ java {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
     options.encoding = 'UTF-8'
-
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
@@ -64,6 +64,8 @@ processResources {
 
 tasks.named("shadowJar") {
     archiveClassifier.set("")
+    relocate 'co.aikar.commands', 'gg.jos.paynowstorehook.acf'
+    relocate 'co.aikar.locales', 'gg.jos.paynowstorehook.locales'
 }
 
 tasks.named("build") {

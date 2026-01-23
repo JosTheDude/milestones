@@ -1,15 +1,15 @@
-package gg.jos.payNowStoreHook;
+package gg.jos.paynowstorehook;
 
-import gg.jos.payNowStoreHook.command.PayNowStoreCommand;
-import gg.jos.payNowStoreHook.config.DatabaseConfig;
-import gg.jos.payNowStoreHook.data.PlayerSpendStore;
-import gg.jos.payNowStoreHook.listener.PlayerDataListener;
-import gg.jos.payNowStoreHook.message.Messages;
-import gg.jos.payNowStoreHook.placeholder.PayNowPlaceholderExpansion;
-import gg.jos.payNowStoreHook.threshold.ThresholdLoader;
-import gg.jos.payNowStoreHook.threshold.ThresholdService;
+import co.aikar.commands.PaperCommandManager;
+import gg.jos.paynowstorehook.command.PayNowStoreCommand;
+import gg.jos.paynowstorehook.config.DatabaseConfig;
+import gg.jos.paynowstorehook.data.PlayerSpendStore;
+import gg.jos.paynowstorehook.listener.PlayerDataListener;
+import gg.jos.paynowstorehook.message.Messages;
+import gg.jos.paynowstorehook.placeholder.PayNowPlaceholderExpansion;
+import gg.jos.paynowstorehook.threshold.ThresholdLoader;
+import gg.jos.paynowstorehook.threshold.ThresholdService;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,6 +49,10 @@ public final class PayNowStoreHook extends JavaPlugin {
         getLogger().info("Disabled.");
     }
 
+    public ThresholdService getThresholdService() {
+        return thresholdService;
+    }
+
     private void preloadOnlinePlayers() {
         for (Player online : Bukkit.getOnlinePlayers()) {
             spendStore.load(online);
@@ -56,12 +60,8 @@ public final class PayNowStoreHook extends JavaPlugin {
     }
 
     private void registerCommand() {
-        PluginCommand command = getCommand("paynowstorehook");
-        if (command == null) {
-            getLogger().severe("Command paynowstorehook missing in plugin.yml");
-            return;
-        }
-        command.setExecutor(new PayNowStoreCommand(this, spendStore, thresholdService, messages));
+        PaperCommandManager commandManager = new PaperCommandManager(this);
+        commandManager.registerCommand(new PayNowStoreCommand(this, spendStore, thresholdService, messages));
     }
 
     private void registerPlaceholders() {

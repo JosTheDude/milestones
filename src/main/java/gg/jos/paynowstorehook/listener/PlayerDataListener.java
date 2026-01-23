@@ -1,6 +1,6 @@
-package gg.jos.payNowStoreHook.listener;
+package gg.jos.paynowstorehook.listener;
 
-import gg.jos.payNowStoreHook.data.PlayerSpendStore;
+import gg.jos.paynowstorehook.data.PlayerSpendStore;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

@@ -1,4 +1,4 @@
-package gg.jos.payNowStoreHook.threshold;
+package gg.jos.paynowstorehook.threshold;
 
 import java.util.List;
 
