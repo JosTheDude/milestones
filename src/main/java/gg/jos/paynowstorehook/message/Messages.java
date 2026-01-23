@@ -1,4 +1,4 @@
-package gg.jos.payNowStoreHook.message;
+package gg.jos.paynowstorehook.message;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

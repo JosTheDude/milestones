@@ -1,8 +1,8 @@
-package gg.jos.payNowStoreHook.data;
+package gg.jos.paynowstorehook.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import gg.jos.payNowStoreHook.config.DatabaseConfig;
+import gg.jos.paynowstorehook.config.DatabaseConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -110,6 +110,15 @@ public final class PlayerSpendStore {
                 return new PlayerData(spent, sanitizedIndex);
             });
         });
+    }
+
+    public boolean isCached(UUID uuid) {
+        return cache.containsKey(uuid);
+    }
+
+    public int getCachedThresholdIndex(UUID uuid) {
+        PlayerData data = cache.get(uuid);
+        return data == null ? -1 : data.thresholdIndex();
     }
 
     public double getCachedSpent(UUID uuid) {

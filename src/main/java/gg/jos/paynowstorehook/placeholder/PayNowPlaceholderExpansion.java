@@ -1,7 +1,7 @@
-package gg.jos.payNowStoreHook.placeholder;
+package gg.jos.paynowstorehook.placeholder;
 
-import gg.jos.payNowStoreHook.PayNowStoreHook;
-import gg.jos.payNowStoreHook.data.PlayerSpendStore;
+import gg.jos.paynowstorehook.PayNowStoreHook;
+import gg.jos.paynowstorehook.data.PlayerSpendStore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

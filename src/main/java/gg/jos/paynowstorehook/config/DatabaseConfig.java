@@ -1,4 +1,4 @@
-package gg.jos.payNowStoreHook.config;
+package gg.jos.paynowstorehook.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
